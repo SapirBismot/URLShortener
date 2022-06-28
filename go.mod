@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/alextanhongpin/base62 v0.0.0-20181112043535-204cf116eaa9
 	github.com/gin-gonic/gin v1.8.1
+	github.com/go-playground/assert/v2 v2.0.1
 )
 
 require (
