@@ -1,4 +1,4 @@
-module puppy
+module github.com/sapirbismot/URLShortener
 
 go 1.18
 
