@@ -16,6 +16,8 @@ type test_struct struct {
 	ShortUrl string `json:"short_url"`
 }
 
+var longUrl = "http://www.google.com/search?q=shortener+url&oq=shortener+url&aqs=chrome..69i57j69i59l2j0i512l2j69i60l3.4152j0j7&sourceid=chrome&ie=UTF-8"
+
 func SetUpRouter() *gin.Engine {
 	r := gin.Default()
 	return r
@@ -23,7 +25,7 @@ func SetUpRouter() *gin.Engine {
 func TestDefaultRequest(t *testing.T) {
 	mockResponse := `{"message":"URL Shortener API!"}`
 	r := SetUpRouter()
-	r.GET("/", hello)
+	r.GET("/", Hello)
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
@@ -34,8 +36,8 @@ func TestDefaultRequest(t *testing.T) {
 
 func TestCreateUrlRequest(t *testing.T) {
 	r := SetUpRouter()
-	r.POST("/create_url", createUrl)
-	reqBody := map[string]string{"long_url": "https://www.google.com/search?q=shortener+url&oq=shortener+url&aqs=chrome..69i57j69i59l2j0i512l2j69i60l3.4152j0j7&sourceid=chrome&ie=UTF-8"}
+	r.POST("/create_url", CreateUrl)
+	reqBody := map[string]string{"long_url": longUrl}
 	jsonBody, _ := json.Marshal(reqBody)
 	req, _ := http.NewRequest("POST", "/create_url", bytes.NewBuffer(jsonBody))
 
@@ -45,11 +47,9 @@ func TestCreateUrlRequest(t *testing.T) {
 }
 
 func TestRedirectRequest(t *testing.T) {
-	longUrl := "http://www.google.com/search?q=shortener+url&oq=shortener+url&aqs=chrome..69i57j69i59l2j0i512l2j69i60l3.4152j0j7&sourceid=chrome&ie=UTF-8"
-
 	r := SetUpRouter()
-	r.POST("/create_url", createUrl)
-	r.GET("/:short_url", redirect)
+	r.POST("/create_url", CreateUrl)
+	r.GET("/:short_url", Redirect)
 
 	reqBody := map[string]string{"long_url": longUrl}
 	jsonBody, _ := json.Marshal(reqBody)

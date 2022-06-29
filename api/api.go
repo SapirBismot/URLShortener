@@ -2,7 +2,6 @@ package api
 
 import (
 	"crypto/sha256"
-	"fmt"
 	"math/big"
 	"net/http"
 
@@ -17,23 +16,11 @@ type UrlCreateRequestBody struct {
 	LongUrl string `json:"long_url" binding:"required"`
 }
 
-func Run() {
-	r := gin.Default()
-	r.GET("/", hello)
-	r.POST("/create_url", createUrl)
-	r.GET("/:short_url", redirect)
-
-	err := r.Run(":9808")
-	if err != nil {
-		panic(fmt.Sprintf("Failure: %v", err))
-	}
-}
-
-func hello(c *gin.Context) {
+func Hello(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{"message": "URL Shortener API!"})
 }
 
-func createUrl(c *gin.Context) {
+func CreateUrl(c *gin.Context) {
 	var createRequestBody UrlCreateRequestBody
 	if err := c.ShouldBindJSON(&createRequestBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -47,7 +34,7 @@ func createUrl(c *gin.Context) {
 	})
 }
 
-func redirect(c *gin.Context) {
+func Redirect(c *gin.Context) {
 	shortUrl := c.Param("short_url")
 	longUrl := urlsMap[shortUrl]
 	c.Redirect(http.StatusFound, "http://"+longUrl)
